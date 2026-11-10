@@ -12,6 +12,7 @@ traduction:
 
 publication:
   heure: "18:30"            # heure de Paris
+  depot_videos: ""          # dépôt public qui héberge les vidéos pour Buffer (vide = ce dépôt)
 
 decoupage:
   duree_min: 60             # secondes
