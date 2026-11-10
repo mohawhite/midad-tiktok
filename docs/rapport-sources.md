@@ -66,3 +66,13 @@ Les API de Pexels et de Pixabay répondent et attendent une clé. Je n'ai pas en
 
 1. **Récitateur :** garder Mishary Rashid Alafasy en acceptant le risque décrit au point 1 ?
 2. **Publication :** partir sur la publication manuelle quotidienne (voie 1), avec un test de la voie 2 plus tard ?
+
+## 8. Décisions prises le 10 novembre 2026
+
+- **Récitateur :** Mishary Rashid Alafasy, aux conditions du point 1.
+- **Publication :** elle doit rester automatique. La voie retenue est Buffer, un service de planification déjà audité par TikTok :
+  - son API officielle est ouverte à toutes les formules, y compris la gratuite (source : centre d'aide de Buffer) ;
+  - elle crée des publications vidéo pour TikTok et permet de choisir l'image de couverture par un décalage dans la vidéo ;
+  - la vidéo doit être accessible par une adresse publique, Buffer ne recevant pas de fichier directement ;
+  - la formule gratuite limite à 3 comptes et 10 publications en attente par compte, ce qui suffit pour une vidéo par jour.
+- **Reste à vérifier par un essai réel :** que la formule gratuite publie bien en public sur TikTok sans intervention, et ses quotas d'appels. Le plan B manuel reste en secours.

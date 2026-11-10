@@ -1,0 +1,17 @@
+# Réglages du compte Midad. Modifiable sans toucher au code.
+
+recitateur:
+  id: ar.alafasy            # identifiant sur api.alquran.cloud
+  nom: Mishary Rashid Alafasy
+
+traduction:
+  id: fr.hamidullah
+  nom: Muhammad Hamidullah
+
+publication:
+  heure: "18:30"            # heure de Paris
+
+# Noms affichés, quand celui de Quran.com ne convient pas.
+noms_sourates:
+  1: Al-Fatiha
+  2: Al-Baqara
