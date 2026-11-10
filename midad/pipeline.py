@@ -8,7 +8,7 @@ from pathlib import Path
 
 import yaml
 
-from . import layout, legende, sources, suivi, verification, video
+from . import ecoute, layout, legende, sources, suivi, verification, video
 from .decoupage import decouper
 
 
@@ -67,6 +67,11 @@ def produire(cfg: dict, passage: suivi.Passage, sortie: Path, fond: Path | None 
 
     controles = verification.controler(surah, passage, verses, screens, audio_dur,
                                        video.COVER + video.HOOK, video.END, out)
+    if cfg["ecoute"]["active"]:
+        problemes = ecoute.controler(verses, cfg["ecoute"]["seuil"])
+        if problemes:
+            raise verification.VerificationError(problemes)
+        controles.append("audio reconnu conforme au texte de chaque verset")
     couverture = sortie / "couverture.png"
     shutil.copy(screens[0].png, couverture)
     texte = legende.legende(surah.name_latin, passage, cfg)

@@ -2,11 +2,11 @@
 from __future__ import annotations
 
 import argparse
-import sys
+import os
 from datetime import date
 from pathlib import Path
 
-from . import pipeline, suivi
+from . import pipeline, publication, suivi
 from .decoupage import VERSETS
 
 
@@ -29,7 +29,14 @@ def _jour(args, cfg) -> None:
     if args.dry_run:
         print("Mode essai : rien n'est publié, le suivi n'est pas modifié.")
         return
-    sys.exit("La publication n'est pas encore branchée : relancer avec --dry-run.")
+    mode, identifiant = publication.publier(res, cfg, jour)
+    suivi.enregistrer(state, passage, jour, mode, identifiant)
+    suivi.sauver(state)
+    print(f"Suivi mis à jour ({mode}).")
+    sortie = os.environ.get("GITHUB_OUTPUT")
+    if sortie:
+        with open(sortie, "a", encoding="utf-8") as f:
+            f.write(f"mode={mode}\n")
 
 
 def _afficher(res: pipeline.Resultat) -> None:

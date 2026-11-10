@@ -1,0 +1,117 @@
+name: Vidéo du jour
+
+on:
+  schedule:
+    # 15 h 00 UTC, soit 16 h ou 17 h à Paris : la vidéo est prête avant l'heure de publication.
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+    inputs:
+      essai:
+        description: "Essai : produire la vidéo sans publier ni modifier le suivi"
+        type: boolean
+        default: true
+      date:
+        description: "Date à produire (AAAA-MM-JJ), vide = aujourd'hui"
+        required: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: quotidien
+  cancel-in-progress: false
+
+jobs:
+  video:
+    # L'exécution planifiée ne tourne que si la variable MIDAD_ACTIF vaut « true ».
+    if: github.event_name == 'workflow_dispatch' || vars.MIDAD_ACTIF == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer FFmpeg, les bibliothèques et Chromium
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install -q -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Garder en cache le modèle de reconnaissance vocale
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: ecoute-base-ar-quran-v1
+
+      - name: Tests
+        run: python -m pytest -q
+
+      - name: Produire la vidéo du jour
+        id: jour
+        run: |
+          set -o pipefail
+          mkdir -p out
+          ARGS=""
+          if [ -n "${{ inputs.date }}" ]; then ARGS="$ARGS --date ${{ inputs.date }}"; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.essai }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          python -m midad.cli jour $ARGS 2>&1 | tee out/journal.log
+
+      - name: Conserver la vidéo, la couverture, la légende et le journal
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: midad-${{ github.run_id }}
+          path: |
+            out/**/video.mp4
+            out/**/couverture.png
+            out/**/legende.txt
+            out/journal.log
+          retention-days: 7
+
+      - name: Enregistrer le suivi
+        if: steps.jour.outputs.mode != ''
+        run: |
+          git config user.name "midad-bot"
+          git config user.email "midad-bot@users.noreply.github.com"
+          git add suivi.json
+          git commit -m "Suivi : vidéo du $(date -u +%F)"
+          git push
+
+      - name: Prévenir pour une publication manuelle
+        if: steps.jour.outputs.mode == 'manuelle en attente'
+        run: |
+          gh issue create --assignee "${{ github.repository_owner }}" \
+            --title "Vidéo du $(date -u +%F) à publier à la main" \
+            --body "La vidéo du jour est prête mais n'a pas été publiée automatiquement.
+
+          Téléchargez la vidéo, la couverture et la légende ici : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Légende :
+
+          $(cat out/*/legende.txt)"
+
+      - name: Prévenir en cas d'échec
+        if: failure()
+        run: |
+          gh issue create --assignee "${{ github.repository_owner }}" \
+            --title "Échec de la vidéo du $(date -u +%F)" \
+            --body "La vidéo du jour n'a pas été produite ou a été bloquée par une vérification. Rien n'a été publié ; le même passage sera repris demain.
+
+          Journal : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Dernières lignes :
+
+          $(tail -n 25 out/journal.log 2>/dev/null || echo 'journal indisponible')"

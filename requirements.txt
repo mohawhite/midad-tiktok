@@ -3,4 +3,6 @@ pyyaml
 playwright
 hijridate
 pillow
+faster-whisper
+numpy
 pytest

@@ -17,6 +17,12 @@ decoupage:
   duree_min: 60             # secondes
   duree_max: 180
 
+# Contrôle par reconnaissance vocale. Calibrage sur 58 versets : le bon verset obtient
+# au moins 0,93, un mauvais verset au plus 0,77.
+ecoute:
+  active: true
+  seuil: 0.85
+
 legende:
   hashtags: ["#coran", "#quran", "#recitation"]   # un hashtag au nom de la sourate est ajouté
   longueur_max: 2200
