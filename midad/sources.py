@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import time
 import unicodedata
@@ -54,6 +55,9 @@ def skeleton(text: str) -> str:
     Les éditions Uthmani diffèrent par leurs signes (voyelles, petits alifs,
     marques de pause) mais jamais par leurs lettres.
     """
+    # Au milieu d'un mot, un ya sans points qui porte un petit alif n'est qu'un support
+    # (Tanzil) ; Quran.com le remplace par un trait d'allongement.
+    text = re.sub("\u0649\u0670(?=\\S)", "\u0670", text)
     out = []
     for ch in unicodedata.normalize("NFD", text):
         if unicodedata.category(ch) in ("Mn", "Cf") or ch == "ـ":
@@ -65,7 +69,8 @@ def skeleton(text: str) -> str:
         elif ch == "ى":  # alif maqsura / ya sans points
             ch = "ي"
         out.append(ch)
-    return "".join("".join(out).split())
+    # Tanzil écrit « hamza + alif » là où Quran.com écrit « alif madda ».
+    return "".join("".join(out).split()).replace("\u0621\u0627", "\u0627")
 
 
 @dataclass

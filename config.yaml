@@ -1,5 +1,7 @@
 # Réglages du compte Midad. Modifiable sans toucher au code.
 
+compte: "@midad.coran"
+
 recitateur:
   id: ar.alafasy            # identifiant sur api.alquran.cloud
   nom: Mishary Rashid Alafasy
@@ -11,7 +13,35 @@ traduction:
 publication:
   heure: "18:30"            # heure de Paris
 
-# Noms affichés, quand celui de Quran.com ne convient pas.
-noms_sourates:
-  1: Al-Fatiha
-  2: Al-Baqara
+decoupage:
+  duree_min: 60             # secondes
+  duree_max: 180
+
+legende:
+  hashtags: ["#coran", "#quran", "#recitation"]   # un hashtag au nom de la sourate est ajouté
+  longueur_max: 2200
+
+# Ordre de la progression principale : sourates courtes et connues d'abord,
+# puis le reste de Juz Amma, puis les autres.
+ordre:
+  - [1, 112, 113, 114]
+  - {de: 78, a: 111}
+  - {de: 2, a: 77}
+
+# Le vendredi, une partie d'Al-Kahf, sans faire avancer la progression principale.
+vendredi:
+  sourate: 18
+
+# Pendant le Ramadan, ces passages passent avant la progression principale
+# (liste proposée, à valider). Une fois la liste épuisée, la progression reprend.
+ramadan:
+  - {sourate: 2, versets: [183, 186]}   # le jeûne
+  - {sourate: 2, versets: [187, 187]}
+  - {sourate: 97, versets: [1, 5]}      # la nuit du Destin
+  - {sourate: 44, versets: [1, 8]}      # la nuit bénie
+  - {sourate: 2, versets: [255, 255]}   # verset du Trône
+  - {sourate: 2, versets: [285, 286]}
+  - {sourate: 3, versets: [190, 194]}
+  - {sourate: 39, versets: [53, 55]}    # la miséricorde
+  - {sourate: 25, versets: [63, 70]}    # les serviteurs du Tout Miséricordieux
+  - {sourate: 59, versets: [21, 24]}

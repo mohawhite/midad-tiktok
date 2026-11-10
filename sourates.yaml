@@ -1,0 +1,117 @@
+# Nom affiché et mots-clés de recherche des clips (en anglais, paysages uniquement).
+defaut: [mountains, clouds, ocean waves, starry night sky]
+sourates:
+  1: {nom: Al-Fatiha, mots: [sunrise sky, clouds, mountains]}
+  2: {nom: Al-Baqara, mots: [rain, mountains, river, green valley]}
+  3: {nom: Al-Imran, mots: [mountains, sunrise, night sky]}
+  4: {nom: An-Nisa, mots: [calm lake, forest, soft clouds]}
+  5: {nom: Al-Maida, mots: [river, green valley, rain]}
+  6: {nom: Al-Anam, mots: [starry night sky, sunrise, mountains]}
+  7: {nom: Al-Araf, mots: [mountains, desert, storm clouds]}
+  8: {nom: Al-Anfal, mots: [desert, rain, clouds]}
+  9: {nom: At-Tawba, mots: [desert, mountains, sunset]}
+  10: {nom: Yunus, mots: [ocean waves, deep sea, storm clouds]}
+  11: {nom: Hud, mots: [storm clouds, ocean waves, rain]}
+  12: {nom: Yusuf, mots: [starry night sky, moon, desert]}
+  13: {nom: Ar-Rad, mots: [lightning, storm clouds, rain]}
+  14: {nom: Ibrahim, mots: [desert, starry night sky, trees]}
+  15: {nom: Al-Hijr, mots: [rock canyon, desert, night sky]}
+  16: {nom: An-Nahl, mots: [flowers field, mountains, rain]}
+  17: {nom: Al-Isra, mots: [night sky, moon, stars]}
+  18: {nom: Al-Kahf, mots: [cave, mountains, river, sunrise]}
+  19: {nom: Maryam, mots: [palm trees, calm stream, sunrise]}
+  20: {nom: Ta-Ha, mots: [desert night, mountains, sea]}
+  21: {nom: Al-Anbiya, mots: [night sky, sunrise, mountains]}
+  22: {nom: Al-Hajj, mots: [desert, mountains, rain on earth]}
+  23: {nom: Al-Muminun, mots: [rain, gardens, night sky]}
+  24: {nom: An-Nur, mots: [light rays, clouds, sunrise]}
+  25: {nom: Al-Furqan, mots: [sea, clouds, night sky]}
+  26: {nom: Ash-Shuara, mots: [desert, sea waves, mountains]}
+  27: {nom: An-Naml, mots: [desert, gardens, rain]}
+  28: {nom: Al-Qasas, mots: [river, desert, mountains]}
+  29: {nom: Al-Ankabut, mots: [rain, mountains, sea]}
+  30: {nom: Ar-Rum, mots: [rain, wind clouds, green hills]}
+  31: {nom: Luqman, mots: [mountains, sea, trees]}
+  32: {nom: As-Sajda, mots: [night sky, rain, dry land]}
+  33: {nom: Al-Ahzab, mots: [wind, desert, storm clouds]}
+  34: {nom: Saba, mots: [gardens, river, mountains]}
+  35: {nom: Fatir, mots: [clouds, sea, colorful mountains]}
+  36: {nom: Ya-Sin, mots: [moon, night sky, green fields]}
+  37: {nom: As-Saffat, mots: [starry night sky, sea, clouds]}
+  38: {nom: Sad, mots: [mountains, wind, sunrise]}
+  39: {nom: Az-Zumar, mots: [rain, springs, night and day sky]}
+  40: {nom: Ghafir, mots: [night sky, clouds, sunrise]}
+  41: {nom: Fussilat, mots: [mountains, starry night sky, dry land rain]}
+  42: {nom: Ash-Shura, mots: [sea, rain, clouds]}
+  43: {nom: Az-Zukhruf, mots: [rain, mountains, sea]}
+  44: {nom: Ad-Dukhan, mots: [mist, fog, night sky]}
+  45: {nom: Al-Jathiya, mots: [sea, rain, wind clouds]}
+  46: {nom: Al-Ahqaf, mots: [sand dunes, wind, desert]}
+  47: {nom: Muhammad, mots: [river, gardens, mountains]}
+  48: {nom: Al-Fath, mots: [sunrise, open plain, clouds]}
+  49: {nom: Al-Hujurat, mots: [calm lake, soft clouds, trees]}
+  50: {nom: Qaf, mots: [rain, palm trees, mountains]}
+  51: {nom: Adh-Dhariyat, mots: [wind, clouds, starry night sky]}
+  52: {nom: At-Tur, mots: [mountain, sea, night sky]}
+  53: {nom: An-Najm, mots: [stars, night sky, horizon]}
+  54: {nom: Al-Qamar, mots: [moon, night sky, rain]}
+  55: {nom: Ar-Rahman, mots: [sea, sun and moon sky, gardens, trees]}
+  56: {nom: Al-Waqia, mots: [rain, gardens, stars]}
+  57: {nom: Al-Hadid, mots: [rain, mountains, light rays]}
+  58: {nom: Al-Mujadala, mots: [soft clouds, calm lake, dawn]}
+  59: {nom: Al-Hashr, mots: [mountain, desert, sunrise]}
+  60: {nom: Al-Mumtahana, mots: [dawn, calm sea, clouds]}
+  61: {nom: As-Saff, mots: [light rays, gardens, river]}
+  62: {nom: Al-Jumua, mots: [sunrise, calm sea, clouds]}
+  63: {nom: Al-Munafiqun, mots: [fog, forest, clouds]}
+  64: {nom: At-Taghabun, mots: [sky, earth landscape, river]}
+  65: {nom: At-Talaq, mots: [calm lake, dawn, soft clouds]}
+  66: {nom: At-Tahrim, mots: [river, gardens, light rays]}
+  67: {nom: Al-Mulk, mots: [starry night sky, clouds, spring water]}
+  68: {nom: Al-Qalam, mots: [garden, morning mist, sea]}
+  69: {nom: Al-Haqqa, mots: [storm clouds, wind, mountains]}
+  70: {nom: Al-Maarij, mots: [sky, mountains, clouds]}
+  71: {nom: Nuh, mots: [rain, flood water, moon]}
+  72: {nom: Al-Jinn, mots: [starry night sky, shooting stars, desert night]}
+  73: {nom: Al-Muzzammil, mots: [night sky, moon, dawn]}
+  74: {nom: Al-Muddaththir, mots: [moon, dawn, night sky]}
+  75: {nom: Al-Qiyama, mots: [moon, eclipse sky, horizon]}
+  76: {nom: Al-Insan, mots: [gardens, spring water, soft light]}
+  77: {nom: Al-Mursalat, mots: [wind, clouds, mountains]}
+  78: {nom: An-Naba, mots: [mountains, rain clouds, gardens]}
+  79: {nom: An-Naziat, mots: [night sky, mountains, sea]}
+  80: {nom: Abasa, mots: [rain, green fields, olive trees]}
+  81: {nom: At-Takwir, mots: [sunset, stars, dawn]}
+  82: {nom: Al-Infitar, mots: [sky, stars, sea]}
+  83: {nom: Al-Mutaffifin, mots: [clouds, dawn, calm water]}
+  84: {nom: Al-Inshiqaq, mots: [twilight sky, moon, night]}
+  85: {nom: Al-Buruj, mots: [starry night sky, constellations, clouds]}
+  86: {nom: At-Tariq, mots: [night star, rain, earth sprouts]}
+  87: {nom: Al-Ala, mots: [green pasture, sky, river]}
+  88: {nom: Al-Ghashiya, mots: [mountains, sky, desert plain]}
+  89: {nom: Al-Fajr, mots: [dawn, sunrise, night sky]}
+  90: {nom: Al-Balad, mots: [mountain path, valley, sunrise]}
+  91: {nom: Ash-Shams, mots: [sun, moon, day sky]}
+  92: {nom: Al-Layl, mots: [night sky, dawn, stars]}
+  93: {nom: Ad-Duha, mots: [morning sun, calm night, sunrise]}
+  94: {nom: Ash-Sharh, mots: [sunrise after storm, clouds opening, calm sea]}
+  95: {nom: At-Tin, mots: [olive trees, fig tree, mountain]}
+  96: {nom: Al-Alaq, mots: [cave light, mountain, night sky]}
+  97: {nom: Al-Qadr, mots: [starry night sky, moon, dawn]}
+  98: {nom: Al-Bayyina, mots: [river, gardens, light rays]}
+  99: {nom: Az-Zalzala, mots: [earth landscape, mountains, canyon]}
+  100: {nom: Al-Adiyat, mots: [dust, desert, dawn]}
+  101: {nom: Al-Qaria, mots: [mountains, clouds, wind]}
+  102: {nom: At-Takathur, mots: [desert, horizon, sunset]}
+  103: {nom: Al-Asr, mots: [sunset, time lapse clouds, horizon]}
+  104: {nom: Al-Humaza, mots: [fog, dark clouds, mountains]}
+  105: {nom: Al-Fil, mots: [desert, rocks, sky]}
+  106: {nom: Quraysh, mots: [desert, winter mountains, summer sky]}
+  107: {nom: Al-Maun, mots: [soft clouds, calm lake, dawn]}
+  108: {nom: Al-Kawthar, mots: [river, waterfall, spring water]}
+  109: {nom: Al-Kafirun, mots: [horizon, calm sea, clouds]}
+  110: {nom: An-Nasr, mots: [sunrise, open plain, light rays]}
+  111: {nom: Al-Masad, mots: [desert, dark clouds, rocks]}
+  112: {nom: Al-Ikhlas, mots: [sky, clouds, light rays]}
+  113: {nom: Al-Falaq, mots: [dawn, night sky, sunrise]}
+  114: {nom: An-Nas, mots: [calm sea, soft clouds, dawn]}
