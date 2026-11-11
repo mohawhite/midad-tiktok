@@ -90,7 +90,9 @@ def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, back
         f"color=c=white@0.3:s={BAR_W}x{BAR_H}:r={FPS}:d={total:.4f},format=rgba[track]",
         f"color=c=white:s={BAR_W}x{BAR_H}:r={FPS}:d={total:.4f},format=rgba[fill]",
         f"[track][fill]overlay=x='-{BAR_W}+{BAR_W}*min(max((t-{intro})/{audio_dur:.4f},0),1)':y=0[bar]",
-        f"[base][bar]overlay=x={layout.SAFE_SIDE}:y={BAR_Y}:enable='between(t,{intro},{intro + audio_dur:.4f})'[withbar]",
+        # La barre reste affichée après la récitation : elle s'efface avec le logo du bas,
+        # dans le même fondu vers le noir.
+        f"[base][bar]overlay=x={layout.SAFE_SIDE}:y={BAR_Y}:enable='gte(t,{intro})'[withbar]",
     ]
     labels = []
     for i, s in enumerate(screens):
