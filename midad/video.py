@@ -9,10 +9,12 @@ from . import layout
 from .sources import Surah, Verse
 
 FPS = 30
-COVER = 0.4   # miniature, sert de couverture (image 0)
-HOOK = 1.6    # accroche
-END = 2.0     # logo de fin
-FADE = 0.25
+COVER = 0.7   # miniature, sert de couverture (image 0)
+HOOK = 1.8    # accroche
+END = 2.5     # logo de fin, sur fond noir
+FADE = 0.25   # fondu des écrans de versets
+FADE_INTRO = 0.4
+FADE_FIN = 0.6
 BAR_W, BAR_H = 800, 4
 BAR_Y = layout.H - layout.SAFE_BOTTOM - 44
 
@@ -24,6 +26,8 @@ class Screen:
     end: float
     label: str
     opaque: bool = False
+    fade_in: float = FADE
+    fade_out: float = FADE
 
 
 def verse_range_label(verses: list[Verse]) -> str:
@@ -35,9 +39,10 @@ def build_screens(surah: Surah, verses: list[Verse], part: str, work: Path, r: l
     work.mkdir(parents=True, exist_ok=True)
     screens = [
         Screen(r.png(layout.cover_html(surah.number, surah.name_arabic, surah.name_latin, part),
-                     work / "cover.png", opaque=True), 0.0, COVER, "miniature", opaque=True),
+                     work / "cover.png", opaque=True), 0.0, COVER, "miniature", opaque=True,
+               fade_in=0, fade_out=FADE_INTRO),
         Screen(r.png(layout.hook_html(surah.name_arabic, surah.name_latin, verse_range_label(verses)),
-                     work / "hook.png"), COVER, COVER + HOOK, "accroche"),
+                     work / "hook.png"), COVER, COVER + HOOK, "accroche", fade_in=FADE_INTRO, fade_out=FADE_INTRO),
     ]
     t = COVER + HOOK
     for v in verses:
@@ -48,7 +53,9 @@ def build_screens(surah: Surah, verses: list[Verse], part: str, work: Path, r: l
             png = r.png(layout.verse_html(ref, c.arabic, c.french), work / f"v{v.number:03d}_{i}.png")
             screens.append(Screen(png, t, t + d, f"{v.key} écran {i + 1}/{len(chunks)}"))
             t += d
-    screens.append(Screen(r.png(layout.end_html(), work / "end.png"), t, t + END, "fin"))
+    screens[-1].fade_out = FADE_FIN  # le dernier verset s'efface doucement avant le logo
+    screens.append(Screen(r.png(layout.end_html(), work / "end.png", opaque=True), t, t + END, "fin",
+                          opaque=True, fade_in=FADE_FIN, fade_out=0))
     return screens
 
 
@@ -86,12 +93,12 @@ def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, back
     labels = []
     for i, s in enumerate(screens):
         d = s.end - s.start
-        fade = min(FADE, d / 3)
+        fin, fout = min(s.fade_in, d / 3), min(s.fade_out, d / 3)
         chain = f"[{i + 2}:v]format=rgba,fps={FPS}"
-        if i > 0:
-            chain += f",fade=t=in:st=0:d={fade:.3f}:alpha=1"
-        if i < len(screens) - 1:
-            chain += f",fade=t=out:st={d - fade:.4f}:d={fade:.3f}:alpha=1"
+        if fin > 0:
+            chain += f",fade=t=in:st=0:d={fin:.3f}:alpha=1"
+        if fout > 0:
+            chain += f",fade=t=out:st={d - fout:.4f}:d={fout:.3f}:alpha=1"
         f.append(chain + f"[s{i}]")
         labels.append(f"[s{i}]")
     f.append("".join(labels) + f"concat=n={len(screens)}:v=1:a=0[text]")

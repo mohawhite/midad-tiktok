@@ -30,8 +30,8 @@ html, body {{ margin: 0; background: transparent; }}
 .caps {{ font-weight: 500; text-transform: uppercase; }}
 .rule {{ background: #fff; }}
 .ref {{ font-size: 32px; font-weight: 500; letter-spacing: 0.12em; padding-top: 24px; text-transform: uppercase; }}
-.body {{ flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 56px;
-  padding-bottom: 60px; }}
+.body {{ flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 56px; }}
+.pied {{ margin-bottom: 80px; }}
 .ar {{ font-family: 'Amiri Quran', serif; font-size: 84px; line-height: 2; direction: rtl; }}
 .fr {{ font-size: 46px; font-weight: 400; line-height: 1.4; }}
 """
@@ -50,11 +50,16 @@ def _spaced(text: str, size: int, spacing: float, weight: int = 500) -> str:
             f"letter-spacing:{spacing}em;margin-right:-{spacing}em'>{_e(text)}</div>")
 
 
-def _logo(word: int, latin: int, rule_w: int, gap: int) -> str:
-    return (f"<div style='display:flex;flex-direction:column;align-items:center;gap:{gap}px'>"
-            f"<div class='ruqaa' style='font-size:{word}px;line-height:1.1'>مداد</div>"
-            f"<div class='rule' style='width:{rule_w}px;height:2px'></div>"
-            f"{_spaced('Midad', latin, 0.5)}</div>")
+def _logo(echelle: float = 1.0) -> str:
+    """Le logo Midad, identique partout : le mot, un fin trait, le nom en capitales."""
+    e = echelle
+    return (f"<div style='display:flex;flex-direction:column;align-items:center;gap:{12 * e:.0f}px'>"
+            f"<div class='ruqaa' style='font-size:{90 * e:.0f}px;line-height:1.1'>مداد</div>"
+            f"<div class='rule' style='width:{26 * e:.0f}px;height:2px'></div>"
+            f"{_spaced('Midad', round(20 * e), 0.5)}</div>")
+
+
+PIED = f"<div class='pied' id='pied'>{_logo(0.8)}</div>"
 
 
 def cover_html(number: int, name_ar: str, name_lat: str, part: str) -> str:
@@ -68,24 +73,26 @@ def cover_html(number: int, name_ar: str, name_lat: str, part: str) -> str:
         "<div class='rule' style='width:72px;height:3px'></div>"
         f"{_spaced(name_lat, 60, 0.4)}"
         f"<div style='font-size:48px'>{_e(part)}</div></div>"
-        f"{_logo(90, 22, 0, 12)}</div></div>"
+        f"{_logo()}</div></div>"
     )
 
 
 def hook_html(name_ar: str, name_lat: str, verses: str) -> str:
     return _page(
-        "<div class='frame'><div class='safe center' style='gap:44px'>"
+        "<div class='frame'><div class='safe'>"
+        "<div class='body' style='gap:44px'>"
         f"<div class='ruqaa' style='font-size:230px;line-height:1.2'>{_e(name_ar)}</div>"
         "<div class='rule' style='width:72px;height:3px'></div>"
         f"{_spaced(name_lat, 54, 0.4)}"
-        f"<div style='font-size:44px'>{_e(verses)}</div></div></div>"
+        f"<div style='font-size:44px'>{_e(verses)}</div></div>{PIED}</div></div>"
     )
 
 
 def end_html() -> str:
+    """Fin : le logo seul, au centre, sur fond noir."""
     return _page(
-        "<div class='frame' style='background:rgba(0,0,0,0.5)'><div class='safe center'>"
-        f"{_logo(150, 26, 40, 18)}</div></div>"
+        "<div class='frame' style='background:#000'><div style='position:absolute;inset:0;display:flex;"
+        f"align-items:center;justify-content:center'>{_logo(1.8)}</div></div>"
     )
 
 
@@ -94,7 +101,7 @@ def verse_html(ref: str, arabic: str, french: str) -> str:
         "<div class='frame'><div class='safe'>"
         f"<div class='ref'>{_e(ref)}</div>"
         f"<div class='body'><div class='ar' id='ar'>{_e(arabic)}</div>"
-        f"<div class='fr' id='fr'>{_e(french)}</div></div></div></div>"
+        f"<div class='fr' id='fr'>{_e(french)}</div></div>{PIED}</div></div>"
     )
 
 
@@ -224,12 +231,13 @@ class Renderer:
               return {lines: Math.round(ar.getBoundingClientRect().height / lh),
                       overflowX: Math.max(ar.scrollWidth, fr.scrollWidth) > body.clientWidth + 1,
                       top: ar.getBoundingClientRect().top, refBottom: ref.getBoundingClientRect().bottom,
-                      bottom: fr.getBoundingClientRect().bottom};
+                      bottom: fr.getBoundingClientRect().bottom,
+                      pied: document.getElementById('pied').getBoundingClientRect().top};
             }"""
         )
-        limit = H - SAFE_BOTTOM - 60  # 60 px réservés à la barre de progression
+        # Le texte doit rester sous le repère du haut et au-dessus du logo du bas.
         return (m["lines"] <= MAX_ARABIC_LINES and not m["overflowX"]
-                and m["top"] >= m["refBottom"] + 20 and m["bottom"] <= limit)
+                and m["top"] >= m["refBottom"] + 20 and m["bottom"] <= m["pied"] - 30)
 
     def split_verse(self, arabic: str, french: str) -> list[Chunk]:
         """Découpe un verset en autant d'écrans que nécessaire, sans jamais réduire le texte."""
