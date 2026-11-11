@@ -6,10 +6,11 @@ on:
     - cron: "0 15 * * *"
   workflow_dispatch:
     inputs:
-      essai:
-        description: "Essai : produire la vidéo sans publier ni modifier le suivi"
-        type: boolean
-        default: true
+      mode:
+        description: "essai = rien ne sort ; brouillon = dépôt dans les brouillons Buffer ; publication = vraie publication"
+        type: choice
+        options: [essai, brouillon, publication]
+        default: essai
       date:
         description: "Date à produire (AAAA-MM-JJ), vide = aujourd'hui"
         required: false
@@ -64,9 +65,8 @@ jobs:
           mkdir -p out
           ARGS=""
           if [ -n "${{ inputs.date }}" ]; then ARGS="$ARGS --date ${{ inputs.date }}"; fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.essai }}" = "true" ]; then
-            ARGS="$ARGS --dry-run"
-          fi
+          if [ "${{ inputs.mode }}" = "essai" ]; then ARGS="$ARGS --dry-run"; fi
+          if [ "${{ inputs.mode }}" = "brouillon" ]; then ARGS="$ARGS --brouillon"; fi
           python -m midad.cli jour $ARGS 2>&1 | tee out/journal.log
 
       - name: Conserver la vidéo, la couverture, la légende et le journal

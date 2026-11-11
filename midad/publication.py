@@ -85,7 +85,7 @@ def _echeance(jour: date, cfg: dict) -> datetime:
     return max(prevu, datetime.now(timezone.utc) + timedelta(minutes=5)).astimezone(timezone.utc)
 
 
-def publier_buffer(res, cfg: dict, jour: date) -> str:
+def publier_buffer(res, cfg: dict, jour: date, brouillon: bool = False) -> str:
     url = heberger(res.video, jour, cfg)
     data = _graphql(
         """mutation($input: CreatePostInput!) {
@@ -101,6 +101,7 @@ def publier_buffer(res, cfg: dict, jour: date) -> str:
             "mode": "customScheduled",
             "dueAt": _echeance(jour, cfg).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
             "assets": [{"video": {"url": url, "metadata": {"thumbnailOffset": 0}}}],
+            "saveToDraft": brouillon,
         }},
     )["createPost"]
     if "post" not in data:

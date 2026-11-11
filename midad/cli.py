@@ -27,6 +27,10 @@ def _jour(args, cfg) -> None:
     res = pipeline.produire(cfg, passage, args.sortie / jour.isoformat(), args.fond,
                             suivi.clips_de_la_veille(state))
     _afficher(res)
+    if args.brouillon:
+        identifiant = publication.publier_buffer(res, cfg, jour, brouillon=True)
+        print(f"Brouillon déposé dans Buffer ({identifiant}) : rien n'est publié, le suivi n'est pas modifié.")
+        return
     if args.dry_run:
         print("Mode essai : rien n'est publié, le suivi n'est pas modifié.")
         return
@@ -63,6 +67,7 @@ def main() -> None:
     j = sub.add_parser("jour", help="produit la vidéo prévue pour une date")
     j.add_argument("--date", help="AAAA-MM-JJ (par défaut : aujourd'hui)")
     j.add_argument("--dry-run", action="store_true")
+    j.add_argument("--brouillon", action="store_true", help="dépose la vidéo en brouillon dans Buffer, sans publier")
     args = p.parse_args()
     cfg = pipeline.charger_config()
     {"essai": _essai, "jour": _jour}[args.cmd](args, cfg)

@@ -68,7 +68,7 @@ Changer de récitateur après le début modifie les durées : il faut alors vide
 
 Le workflow `.github/workflows/quotidien.yml` tourne chaque jour à 15 h UTC, mais seulement si la variable de dépôt `MIDAD_ACTIF` vaut `true` (Settings › Secrets and variables › Actions › Variables). Sans cette variable, rien ne se passe.
 
-Il peut aussi être lancé à la main depuis l'onglet Actions, avec une case « Essai » cochée par défaut.
+Il peut aussi être lancé à la main depuis l'onglet Actions, avec trois modes : `essai` (par défaut, rien ne sort), `brouillon` (la vidéo arrive dans les brouillons Buffer, sans être publiée) et `publication`.
 
 Secrets attendus (Settings › Secrets and variables › Actions › Secrets) :
 
