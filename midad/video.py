@@ -100,6 +100,6 @@ def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, back
              f"adelay={int(intro * 1000)}:all=1,apad=whole_dur={total:.4f}[a]")
 
     cmd += ["-filter_complex", ";".join(f), "-map", "[v]", "-map", "[a]", "-t", f"{total:.4f}",
-            "-r", str(FPS), "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
+            "-r", str(FPS), "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-movflags", "+faststart", str(out)]
     subprocess.run(cmd, check=True)

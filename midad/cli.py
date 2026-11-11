@@ -24,13 +24,14 @@ def _jour(args, cfg) -> None:
     if passage is None:
         print(f"Rien à faire pour le {jour.isoformat()} : la vidéo du jour existe déjà.")
         return
-    res = pipeline.produire(cfg, passage, args.sortie / jour.isoformat(), args.fond)
+    res = pipeline.produire(cfg, passage, args.sortie / jour.isoformat(), args.fond,
+                            suivi.clips_de_la_veille(state))
     _afficher(res)
     if args.dry_run:
         print("Mode essai : rien n'est publié, le suivi n'est pas modifié.")
         return
     mode, identifiant = publication.publier(res, cfg, jour)
-    suivi.enregistrer(state, passage, jour, mode, identifiant)
+    suivi.enregistrer(state, passage, jour, mode, identifiant, res.clips)
     suivi.sauver(state)
     print(f"Suivi mis à jour ({mode}).")
     sortie = os.environ.get("GITHUB_OUTPUT")
@@ -44,6 +45,8 @@ def _afficher(res: pipeline.Resultat) -> None:
     print("Contrôles passés :")
     for c in res.controles:
         print(f"  - {c}")
+    for c in res.clips:
+        print(f"Clip : {c['id']} ({c['auteur']}) {c['lien']}")
     print("Légende :\n" + res.legende)
 
 

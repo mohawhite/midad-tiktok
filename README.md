@@ -15,8 +15,8 @@ Le cahier des charges est dans `docs/prompt.md`, le rapport sur les sources et l
 | Légende | fait |
 | Contrôles avant publication, dont la reconnaissance vocale | fait |
 | Exécution quotidienne sur GitHub Actions et alertes | fait, désactivée par défaut |
-| Clips de fond Pexels et Pixabay | à faire (clés nécessaires) |
-| Publication automatique par Buffer | à faire (compte nécessaire) |
+| Clips de fond Pexels et Pixabay | fait |
+| Publication automatique par Buffer | écrite, à tester avec la clé |
 
 Tant que la publication par Buffer n'est pas branchée, le robot applique le plan B : il remet la vidéo, la couverture et la légende, et ouvre une alerte pour une publication à la main.
 
@@ -60,6 +60,7 @@ Tout se règle dans deux fichiers, sans toucher au code :
 
 - `config.yaml` : récitateur, traducteur, heure, durées de découpage, seuil de la reconnaissance vocale, hashtags, ordre des sourates, passages du Ramadan.
 - `sourates.yaml` : nom affiché et mots-clés de clips pour chacune des 114 sourates.
+- `clips_exclus.yaml` : clips à ne jamais utiliser, par identifiant.
 
 Changer de récitateur après le début modifie les durées : il faut alors vider la rubrique `decoupages` de `suivi.json` pour les sourates pas encore commencées.
 

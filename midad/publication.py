@@ -43,9 +43,9 @@ def _graphql(query: str, variables: dict | None = None) -> dict:
     raise PublicationError(f"Buffer ne répond pas correctement ({last})")
 
 
-def canal_tiktok() -> str:
-    if os.environ.get("BUFFER_CHANNEL_ID"):
-        return os.environ["BUFFER_CHANNEL_ID"]
+def canal_tiktok(cfg: dict) -> str:
+    if cfg["publication"].get("canal_buffer"):
+        return cfg["publication"]["canal_buffer"]
     orgs = _graphql("query { account { organizations { id } } }")["account"]["organizations"]
     for org in orgs:
         data = _graphql("query($o: OrganizationId!) { channels(input: {organizationId: $o}) { id service } }",
@@ -96,7 +96,7 @@ def publier_buffer(res, cfg: dict, jour: date) -> str:
            }""",
         {"input": {
             "text": res.legende,
-            "channelId": canal_tiktok(),
+            "channelId": canal_tiktok(cfg),
             "schedulingType": "automatic",
             "mode": "customScheduled",
             "dueAt": _echeance(jour, cfg).strftime("%Y-%m-%dT%H:%M:%S.000Z"),

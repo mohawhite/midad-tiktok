@@ -1,6 +1,7 @@
 """Chaîne complète d'une journée : choisir le passage, produire la vidéo, la vérifier."""
 from __future__ import annotations
 
+import os
 import shutil
 from dataclasses import dataclass
 from datetime import date
@@ -8,7 +9,7 @@ from pathlib import Path
 
 import yaml
 
-from . import ecoute, layout, legende, sources, suivi, verification, video
+from . import clips, ecoute, layout, legende, sources, suivi, verification, video
 from .decoupage import decouper
 
 
@@ -19,6 +20,7 @@ class Resultat:
     couverture: Path
     legende: str
     controles: list[str]
+    clips: list[dict]
 
 
 def charger_config() -> dict:
@@ -48,7 +50,8 @@ def calculer_decoupage(cfg: dict, numero: int) -> list[list[int]]:
     return decouper(durees, cfg["decoupage"]["duree_min"], cfg["decoupage"]["duree_max"])
 
 
-def produire(cfg: dict, passage: suivi.Passage, sortie: Path, fond: Path | None = None) -> Resultat:
+def produire(cfg: dict, passage: suivi.Passage, sortie: Path, fond: Path | None = None,
+             clips_interdits: set[str] | None = None) -> Resultat:
     surah = _charger(cfg, passage.sourate)
     verses = [v for v in surah.verses
               if passage.debut <= v.number <= passage.fin or (v.number == 0 and passage.debut == 1)]
@@ -62,6 +65,16 @@ def produire(cfg: dict, passage: suivi.Passage, sortie: Path, fond: Path | None 
         screens = video.build_screens(surah, verses, partie, work, r)
     audio = work / "audio.wav"
     audio_dur = video.concat_audio(verses, audio)
+    utilises: list[dict] = []
+    if fond is None and (os.environ.get("PEXELS_API_KEY") or os.environ.get("PIXABAY_API_KEY")):
+        fiche = cfg["sourates"]["sourates"][passage.sourate]
+        debuts, t = [], video.COVER + video.HOOK
+        for v in verses:
+            debuts.append(t)
+            t += v.duration
+        fond, utilises = clips.fond_du_jour(
+            fiche.get("mots") or cfg["sourates"]["defaut"], debuts, screens[-1].end,
+            clips_interdits or set(), f"{passage.sourate}:{passage.debut}", work)
     out = sortie / "video.mp4"
     video.render(screens, audio, audio_dur, out, fond)
 
@@ -76,7 +89,7 @@ def produire(cfg: dict, passage: suivi.Passage, sortie: Path, fond: Path | None 
     shutil.copy(screens[0].png, couverture)
     texte = legende.legende(surah.name_latin, passage, cfg)
     (sortie / "legende.txt").write_text(texte + "\n", encoding="utf-8")
-    return Resultat(passage, out, couverture, texte, controles)
+    return Resultat(passage, out, couverture, texte, controles, utilises)
 
 
 def du_jour(cfg: dict, jour: date, state: dict) -> suivi.Passage | None:

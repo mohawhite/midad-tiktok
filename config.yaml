@@ -12,6 +12,7 @@ traduction:
 
 publication:
   heure: "18:30"            # heure de Paris
+  canal_buffer: "6af42a5d62b70b94b0f231c9"   # identifiant du compte TikTok dans Buffer
   depot_videos: ""          # dépôt public qui héberge les vidéos pour Buffer (vide = ce dépôt)
 
 decoupage:
