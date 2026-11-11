@@ -67,10 +67,11 @@ def controler(surah: Surah, passage: Passage, verses: list[Verse], screens: list
         ok.append("format 1080 × 1920, piste audio, durée conforme")
 
     # Tolérance de 8 px : l'encre d'une lettre arabe dépasse parfois légèrement de sa ligne.
+    # Le logo du bas est volontairement placé sous la barre : seul le texte est contrôlé.
     tol = 8
-    box = (layout.SAFE_SIDE - tol, layout.SAFE_TOP, layout.W - layout.SAFE_SIDE + tol, layout.H - layout.SAFE_BOTTOM)
+    box = (layout.SAFE_SIDE - tol, layout.SAFE_TOP, layout.W - layout.SAFE_SIDE + tol, layout.BAR_Y - 10)
     for s in screens[1:-1]:
-        b = Image.open(s.png).getchannel("A").getbbox()
+        b = Image.open(s.png).getchannel("A").crop((0, 0, layout.W, layout.BAR_Y)).getbbox()
         if b is None:
             ko.append(f"{s.label} : écran vide")
         elif b[0] < box[0] or b[1] < box[1] or b[2] > box[2] or b[3] > box[3]:

@@ -16,7 +16,7 @@ FADE = 0.25   # fondu des écrans de versets
 FADE_INTRO = 0.4
 FADE_FIN = 0.6
 BAR_W, BAR_H = 800, 4
-BAR_Y = layout.H - layout.SAFE_BOTTOM - 44
+BAR_Y = layout.BAR_Y
 
 
 @dataclass
