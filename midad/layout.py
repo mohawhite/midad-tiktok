@@ -90,8 +90,13 @@ def hook_html(name_ar: str, name_lat: str, verses: str) -> str:
         f"<div class='ruqaa' style='font-size:230px;line-height:1.2'>{_e(name_ar)}</div>"
         "<div class='rule' style='width:72px;height:3px'></div>"
         f"{_spaced(name_lat, 54, 0.4)}"
-        f"<div style='font-size:44px'>{_e(verses)}</div></div></div>{PIED}</div>"
+        f"<div style='font-size:44px'>{_e(verses)}</div></div></div></div>"
     )
+
+
+def logo_bas_html() -> str:
+    """Le logo du bas, seul : il reste fixe pendant toute la récitation."""
+    return _page(f"<div class='frame'>{PIED}</div>")
 
 
 def end_html() -> str:
@@ -107,7 +112,7 @@ def verse_html(ref: str, arabic: str, french: str) -> str:
         "<div class='frame'><div class='safe'>"
         f"<div class='ref'>{_e(ref)}</div>"
         f"<div class='body'><div class='ar' id='ar'>{_e(arabic)}</div>"
-        f"<div class='fr' id='fr'>{_e(french)}</div></div></div>{PIED}</div>"
+        f"<div class='fr' id='fr'>{_e(french)}</div></div></div></div>"
     )
 
 

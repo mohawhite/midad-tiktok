@@ -54,6 +54,7 @@ def build_screens(surah: Surah, verses: list[Verse], part: str, work: Path, r: l
             screens.append(Screen(png, t, t + d, f"{v.key} écran {i + 1}/{len(chunks)}"))
             t += d
     screens[-1].fade_out = FADE_FIN  # le dernier verset s'efface doucement avant le logo
+    r.png(layout.logo_bas_html(), work / "logo_bas.png")
     screens.append(Screen(r.png(layout.end_html(), work / "end.png", opaque=True), t, t + END, "fin",
                           opaque=True, fade_in=FADE_FIN, fade_out=0))
     return screens
@@ -68,6 +69,7 @@ def concat_audio(verses: list[Verse], out: Path) -> float:
 
 
 def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, background: Path | None = None) -> None:
+    logo = screens[0].png.with_name("logo_bas.png")
     total = screens[-1].end
     intro = COVER + HOOK
     cmd = ["ffmpeg", "-v", "error", "-y"]
@@ -75,7 +77,7 @@ def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, back
         cmd += ["-stream_loop", "-1", "-i", str(background)]
     else:  # fond provisoire, tant qu'aucun clip n'est fourni
         cmd += ["-f", "lavfi", "-i", f"color=c=0x2a2f38:s={layout.W}x{layout.H}:r={FPS}"]
-    cmd += ["-i", str(audio)]
+    cmd += ["-i", str(audio), "-i", str(logo)]
     for s in screens:
         cmd += ["-loop", "1", "-framerate", str(FPS), "-t", f"{s.end - s.start:.4f}", "-i", str(s.png)]
 
@@ -94,7 +96,7 @@ def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, back
     for i, s in enumerate(screens):
         d = s.end - s.start
         fin, fout = min(s.fade_in, d / 3), min(s.fade_out, d / 3)
-        chain = f"[{i + 2}:v]format=rgba,fps={FPS}"
+        chain = f"[{i + 3}:v]format=rgba,fps={FPS}"
         if fin > 0:
             chain += f",fade=t=in:st=0:d={fin:.3f}:alpha=1"
         if fout > 0:
@@ -102,7 +104,9 @@ def render(screens: list[Screen], audio: Path, audio_dur: float, out: Path, back
         f.append(chain + f"[s{i}]")
         labels.append(f"[s{i}]")
     f.append("".join(labels) + f"concat=n={len(screens)}:v=1:a=0[text]")
-    f.append("[withbar][text]overlay=eof_action=pass[v]")
+    # Le logo du bas est un calque fixe, sous les écrans de texte : il ne suit pas leurs fondus.
+    f.append("[withbar][2:v]overlay[withlogo]")
+    f.append("[withlogo][text]overlay=eof_action=pass[v]")
     f.append(f"[1:a]afade=t=in:d=0.1,afade=t=out:st={audio_dur - 0.3:.4f}:d=0.3,"
              f"adelay={int(intro * 1000)}:all=1,apad=whole_dur={total:.4f}[a]")
 
